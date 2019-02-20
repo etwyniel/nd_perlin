@@ -8,7 +8,7 @@ template <size_t N>
 struct Perlin
 {
     Perlin();
-    size_t hash(const Vector<N, size_t>& v) const;
+    size_t hash(const Vector<N, long>& v) const;
     double value_at(const Vector<N>& v) const;
 
     Vector<N> values[PERMUTATIONS];

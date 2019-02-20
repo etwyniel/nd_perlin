@@ -5,10 +5,10 @@
 
 const size_t WIDTH = 400;
 const size_t HEIGHT = 400;
-static double scale = 50;
-static double timescale = 30;
+static double scale = 80;
+static double timescale = 60;
 
-static size_t counter = 0;
+static double counter = 0;
 
 template <size_t N>
 void update(SDL_Window* window, const Perlin<N>& p)
@@ -25,7 +25,7 @@ void update(SDL_Window* window, const Perlin<N>& p)
             Vector<3> v;
             v[0] = x / scale;
             v[1] = y / scale;
-            v[2] = counter / timescale;
+            v[2] = counter;
             double val = p.value_at(v);
             if (val < 0)
                 val = 0;
@@ -39,7 +39,7 @@ void update(SDL_Window* window, const Perlin<N>& p)
     }
 
     std::cout << "step " << counter << '\n';
-    counter++;
+    counter += 1 / timescale;
 
     SDL_UpdateWindowSurface(window);
 }
@@ -50,7 +50,7 @@ void render()
     auto* window = SDL_CreateWindow("perlin noise",
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
-            WIDTH, HEIGHT, 0);
+            WIDTH, HEIGHT, SDL_WINDOW_BORDERLESS);
     Perlin<3> p;
     while (1)
     {
@@ -69,9 +69,9 @@ void render()
                 else if (sc == SDL_SCANCODE_DOWN)
                     scale -= .1;
                 else if (sc == SDL_SCANCODE_LEFT)
-                    timescale += 1;
-                else if (sc == SDL_SCANCODE_RIGHT)
-                    timescale -= 1;
+                    timescale *= 1.1;
+                else if (sc == SDL_SCANCODE_RIGHT && timescale > 0.0000000001)
+                    timescale *= .9;
             }
         }
         int start = SDL_GetTicks();
@@ -79,7 +79,10 @@ void render()
         int time = SDL_GetTicks() - start;
         if (time < 0)
             continue;
-        int sleepTime = (1000 / 60) - time;
+        double rate = 30 - timescale;
+        rate = rate < 15 ? 15 : rate;
+        rate = rate > 30 ? 30 : rate;
+        int sleepTime = (1000 / rate) - time;
         if (sleepTime > 0)
             SDL_Delay(sleepTime);
     }

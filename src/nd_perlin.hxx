@@ -59,7 +59,7 @@ Perlin<N>::Perlin()
 }
 
 template <size_t N>
-size_t Perlin<N>::hash(const Vector<N, size_t>& v) const
+size_t Perlin<N>::hash(const Vector<N, long>& v) const
 {
     size_t ndx = 0;
 #pragma unroll
@@ -72,19 +72,19 @@ size_t Perlin<N>::hash(const Vector<N, size_t>& v) const
 template <size_t N>
 double Perlin<N>::value_at(const Vector<N>& v) const
 {
-    const size_t perm_mask = PERMUTATIONS - 1;
+    const long perm_mask = PERMUTATIONS - 1;
 
-    Vector<N, size_t> i;
+    Vector<N, long> i;
 #pragma unroll
     for (size_t j = 0; j < N; j++)
-        i[j] = ((size_t)v[j]) & perm_mask;
+        i[j] = ((long)v[j]) & perm_mask;
 
     Vector<N> t;
 #pragma unroll
     for (size_t j = 0; j < N; j++)
         t[j] = v[j] - i[j];
 
-    Vector<N, size_t> r0, r1;
+    Vector<N, long> r0, r1;
 #pragma unroll
     for (size_t j = 0; j < N; j++)
     {
@@ -93,7 +93,7 @@ double Perlin<N>::value_at(const Vector<N>& v) const
     }
 
     Vector<1 << N, Vector<N>> corner_values;
-    Vector<N, size_t> corner_pos;
+    Vector<N, long> corner_pos;
 #pragma unroll
     for (size_t corner = 0; corner < 1 << N; corner++)
     {
