@@ -4,7 +4,7 @@
 #include <random>
 
 template <size_t N>
-double interpolate(const Vector<1 << N>& weights, const Vector<N>& t)
+inline double interpolate(const Vector<1 << N>& weights, const Vector<N>& t)
 {
     if constexpr (N == 1) {
         return slerp(weights[0], weights[1], t[0]);
@@ -59,7 +59,7 @@ Perlin<N>::Perlin()
 }
 
 template <size_t N>
-size_t Perlin<N>::hash(const Vector<N, long>& v) const
+inline size_t Perlin<N>::hash(const Vector<N, long>& v) const
 {
     size_t ndx = 0;
 #pragma unroll
@@ -70,7 +70,7 @@ size_t Perlin<N>::hash(const Vector<N, long>& v) const
 }
 
 template <size_t N>
-double Perlin<N>::value_at(const Vector<N>& v) const
+inline double Perlin<N>::value_at(const Vector<N>& v) const
 {
     const long perm_mask = PERMUTATIONS - 1;
 
